@@ -22,6 +22,7 @@ function scan(d) {
   $(".inout_"+inout).show();
   $("#page_qty").show();
   $("#qty").val('').focus();
+  scanbarcode();
 }
 
 function cancel() {
@@ -44,7 +45,7 @@ function proceed() {
       async: false, 
       success: function(data) { 
         if (data=="bad code") {
-          $("#last_action").html("span style='color: red;'>Code not Recognised<\/span>");
+          $("#last_action").html("<span style='color: red;'>Code not Recognised<\/span>");
           cancel();
         } else {
           // get stock figure and product title
@@ -59,6 +60,18 @@ function proceed() {
     });
   }
 }
+
+function scanbarcode() {
+  cordova.plugins.barcodeScanner.scan( function (result) {
+    $("#code").val(result.text);
+    //alert("We got a barcode\n" + "Result: " + result.text + "\n" +  "Format: " + result.format + "\n" + "Cancelled: " + result.cancelled);
+  }, function (error) {
+    alert("Scanning failed: " + error);
+    $("#last_action").html("<span style='color: red;'>Scanning failed: " + error+"<\/span>");
+    cancel();
+  } );
+}
+
 
 </script>
 
