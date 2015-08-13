@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+
+<meta name="viewport" content="width=360, user-scalable=1" >
+
+<script src='jquery.js' type='text/javascript'></script>
+
+
+<script type='text/javascript'>
+var inout=0; // set this to 1 or -1 to scan stock in or out
+
+$(document).ready( function() {
+  $('#qty').keyup(function (e) {if (e.keyCode == 13) { proceed(); } })
+});
+
+function scan(d) {
+  inout=d;
+  d=-d;
+  $("#page_menu").hide();
+  $(".inout_"+d).hide();
+  $(".inout_"+inout).show();
+  $("#page_qty").show();
+  $("#qty").val('').focus();
+}
+
+function cancel() {
+  $("#page_menu").show();
+  $("#page_qty").hide();
+}
+
+function proceed() {
+  var code=$("#code").val();
+  var qty=$("#qty").val();
+  qty=parseInt(qty); if (isNaN(qty)) {qty=0;}
+
+  if (qty==0) {
+  } else {
+
+    qty=qty*inout;
+    var url="http://81.109.211.195/appdev/stock/ajax.asp?code="+code+"&q="+qty;
+    $.ajax({
+      url: url,
+      async: false, 
+      success: function(data) { 
+        if (data=="bad code") {
+          $("#last_action").html("span style='color: red;'>Code not Recognised<\/span>");
+          cancel();
+        } else {
+          // get stock figure and product title
+          var x=data.indexOf(" ");
+          var stock=data.substr(0,x);
+          var title=data.substr(x);
+          $("#last_action").html("Item: "+title+"<br>Stock: "+stock);
+          cancel();
+
+        }
+      }
+    });
+  }
+}
+
+</script>
+
+<style type='text/css'>
+body {margin: 0px; font-family: arial; width: 340px; background: white; color: #444444; font-size: 26px;}
+a.button {display: block; text-align: center; border-radius: 5px; background: #01afff; padding: 20px 0px; margin-bottom: 20px; color: white; text-shadow: 1px 1px 0px black, -1px 1px 0px black, 1px -1px 0px black, -1px -1px 0px black;}
+input.large {width: 340px; display: block; text-align: center; border-radius: 5px; border: 1px solid gray; padding: 20px 0px; margin-bottom: 20px; font-size: 26px;}
+</style>
+
+</head>
+<body>
+
+
+<!-- ########## menu page ########## -->
+
+<table id=page_menu style='height: 100%; width: 340px; margin: 0px 10px; text-align: center; font-size: 26px;'>
+<tr><td id=last_action>Select an Option</td></tr>
+
+<tr><td valign=top>
+<a class=button onclick='scan(1);'>BOOK IN</a>
+<a class=button onclick='scan(-1);'>BOOK OUT</a>
+</td></tr>
+
+</table>
+
+<!-- ########## qty page ########## -->
+
+
+
+<table id=page_qty style='display: none; width: 340px; margin: 0px 10px; text-align: center; font-size: 26px;'>
+<tr><td id=last_action style='padding: 20px 0px;'>
+<div class=inout_1>BOOK IN</div>
+<div class=inout_-1>BOOK OUT</div>
+ENTER QTY</td></tr>
+
+
+
+<tr><td>
+<input id=code placeholder='Code'>
+<input class='focus large' id=qty placeholder='Qty' type=number step=1>
+</td></tr>
+
+<tr><td valign=top>
+<a class=button onclick='proceed();' style='background: #44dd44;'>PROCEED</a>
+<a class=button onclick='cancel();' style='background: #dd4444;'>CANCEL</a>
+</td></tr>
+</table>
+
+
+
+
