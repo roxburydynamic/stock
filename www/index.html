@@ -17,12 +17,15 @@ $(document).ready( function() {
 function scan(d) {
   inout=d;
   d=-d;
+
+  scanbarcode();
+
   $("#page_menu").hide();
   $(".inout_"+d).hide();
   $(".inout_"+inout).show();
   $("#page_qty").show();
-  $("#qty").val('').focus();
-  scanbarcode();
+//  $("#qty").val('').focus();
+
 }
 
 function cancel() {
@@ -98,8 +101,6 @@ input.large {width: 340px; display: block; text-align: center; border-radius: 5p
 </table>
 
 <!-- ########## qty page ########## -->
-
-
 
 <table id=page_qty style='display: none; width: 340px; margin: 0px 10px; text-align: center; font-size: 26px;'>
 <tr><td id=last_action style='padding: 20px 0px;'>
