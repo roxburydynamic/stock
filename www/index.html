@@ -19,7 +19,13 @@ function scan(d) {
   inout=d;
   d=-d;
 
-  scanbarcode();
+  barcodefail=1;
+  while (barcodefail==1) {
+    scanbarcode();
+    if (barcodefail==1) {
+      alert("Scanner Error,\nwrong format detected");
+    };
+  };
 
   $("#page_menu").hide();
   $(".inout_"+d).hide();
@@ -64,11 +70,17 @@ function proceed() {
     });
   }
 }
+var barcodefail=0;
 
 function scanbarcode() {
+  barcodefail=0;
   cordova.plugins.barcodeScanner.scan( function (result) {
     $("#code").val(result.text);
-    alert("We got a barcode\n" + "Result: " + result.text + "\n" +  "Format: " + result.format + "\n" + "Cancelled: " + result.cancelled);
+    if (result.format!="EAN-13") {
+      barcodefail=1;
+      return false;
+    }
+//    alert("We got a barcode\n" + "Result: " + result.text + "\n" +  "Format: " + result.format + "\n" + "Cancelled: " + result.cancelled);
   }, function (error) {
     alert("Scanning failed: " + error);
     $("#last_action").html("<span style='color: red;'>Scanning failed: " + error+"<\/span>");
