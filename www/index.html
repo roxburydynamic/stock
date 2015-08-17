@@ -23,7 +23,7 @@ function scan(d) {
   while (barcodefail==1) {
     scanbarcode();
     if (barcodefail==1) {
-      alert("Scanner Error,\nwrong format detected");
+      alert("Scanner Error, wrong format detected");
     };
   };
 
@@ -80,7 +80,7 @@ function scanbarcode() {
       barcodefail=1;
       return false;
     }
-//    alert("We got a barcode\n" + "Result: " + result.text + "\n" +  "Format: " + result.format + "\n" + "Cancelled: " + result.cancelled);
+    alert("We got a barcode\n" + "Result: " + result.text + "\n" +  "Format: " + result.format + "\n" + "Cancelled: " + result.cancelled);
   }, function (error) {
     alert("Scanning failed: " + error);
     $("#last_action").html("<span style='color: red;'>Scanning failed: " + error+"<\/span>");
